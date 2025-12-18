@@ -1,0 +1,11 @@
+package repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import CRT.entity.Progress;
+import CRT.entity.User;
+public interface ProgressRepository extends JpaRepository<Progress, Long> {
+    List<Progress> findByUser(User user);
+}

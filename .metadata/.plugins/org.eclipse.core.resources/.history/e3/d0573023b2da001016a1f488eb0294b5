@@ -1,0 +1,68 @@
+package CRT.controller;
+
+import CRT.dto.LoginResponse;
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "*")
+public class AuthController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    /* ======================
+       SIGN UP
+       ====================== */
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+
+        if (user.getFullName() == null ||
+            user.getEmail() == null ||
+            user.getPassword() == null) {
+
+            return ResponseEntity.badRequest()
+                    .body("All fields are required");
+        }
+
+        userRepo.save(user);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    /* ======================
+       SIGN IN  ✅ FIXED
+       ====================== */
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestBody User user) {
+
+        User dbUser = userRepo.findByEmail(user.getEmail().trim().toLowerCase())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(dbUser.getPassword())) {
+            return ResponseEntity.status(401)
+                    .body("Invalid credentials");
+        }
+
+        // 🔥 RETURN FULL PROFILE DATA
+        LoginResponse response = new LoginResponse(
+                dbUser.getEmail(),
+                dbUser.getFullName(),
+                dbUser.getAvatarUrl()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    /* ======================
+       LOGOUT
+       ====================== */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("Logout successful");
+    }
+}

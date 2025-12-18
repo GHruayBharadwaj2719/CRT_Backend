@@ -1,0 +1,51 @@
+package CRT.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+@Entity
+@Table(name = "lessons")
+public class Lesson {
+
+    @Id
+    private String id;
+
+    private String title;
+    private String duration;
+    private String category;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Object topics;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Object notes;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Object problems;
+
+    public Lesson() {}
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDuration() { return duration; }
+    public void setDuration(String duration) { this.duration = duration; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public Object getTopics() { return topics; }
+    public void setTopics(Object topics) { this.topics = topics; }
+
+    public Object getNotes() { return notes; }
+    public void setNotes(Object notes) { this.notes = notes; }
+
+    public Object getProblems() { return problems; }
+    public void setProblems(Object problems) { this.problems = problems; }
+}

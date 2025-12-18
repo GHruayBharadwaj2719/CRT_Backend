@@ -1,0 +1,26 @@
+package CRT.dto;
+
+public class LoginResponse {
+
+    private String email;
+    private String fullName;
+    private String avatarUrl;
+
+    public LoginResponse(String email, String fullName, String avatarUrl) {
+        this.email = email;
+        this.fullName = fullName;
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+}

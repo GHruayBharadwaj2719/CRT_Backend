@@ -1,0 +1,5 @@
+package CRT.repository;
+
+public interface ProblemRepository {
+
+}

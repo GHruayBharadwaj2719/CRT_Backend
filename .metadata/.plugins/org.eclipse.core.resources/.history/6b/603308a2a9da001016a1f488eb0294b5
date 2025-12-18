@@ -1,0 +1,34 @@
+package CRT.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    // GET USER PROFILE
+    @GetMapping("/profile")
+    public User getUserProfile(@RequestParam String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // UPDATE USER PROFILE
+    @PutMapping("/profile")
+    public User updateUserProfile(@RequestBody User user) {
+
+        User dbUser = userRepo.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        dbUser.setFullName(user.getFullName());
+        dbUser.setPassword(user.getPassword()); // optional
+        return userRepo.save(dbUser);
+    }
+}

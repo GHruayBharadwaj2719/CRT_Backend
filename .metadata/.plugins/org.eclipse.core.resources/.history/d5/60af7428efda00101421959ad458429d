@@ -1,0 +1,83 @@
+package CRT.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000") // adjust if needed
+public class AuthController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    /* ================= SIGNUP ================= */
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+
+        if (user.getFullName() == null ||
+            user.getEmail() == null ||
+            user.getPassword() == null) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Missing required fields"));
+        }
+
+        // Optional: check if email already exists
+        if (userRepo.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Email already registered"));
+        }
+
+        userRepo.save(user);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "User registered successfully"
+        ));
+    }
+
+    /* ================= SIGNIN ================= */
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestBody User user) {
+
+        User dbUser = userRepo.findByEmail(user.getEmail())
+                .orElse(null);
+
+        if (dbUser == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "User not found"));
+        }
+
+        // ✅ PLAIN TEXT PASSWORD CHECK
+        if (!user.getPassword().equals(dbUser.getPassword())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid credentials"));
+        }
+
+        // ✅ SUCCESS RESPONSE (JSON)
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Login successful");
+        response.put("email", dbUser.getEmail());
+        response.put("fullName", dbUser.getFullName());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /* ================= LOGOUT ================= */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok(Map.of("message", "Logout successful"));
+    }
+}

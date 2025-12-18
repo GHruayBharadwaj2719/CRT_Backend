@@ -1,0 +1,39 @@
+package CRT.controller;
+
+import CRT.dto.LessonResponse;
+import CRT.entity.Lesson;
+import CRT.service.LessonService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/lessons")
+@CrossOrigin(origins = "*")
+public class LessonController {
+
+    private final LessonService lessonService;
+
+    public LessonController(LessonService lessonService) {
+        this.lessonService = lessonService;
+    }
+
+    /**
+     * ADD lesson (topic)
+     * POST /api/lessons
+     */
+    @PostMapping("/{category}")
+    public Lesson addLesson(@RequestBody Lesson lesson) {
+        return lessonService.addLesson(lesson);
+    }
+    /**
+     * FETCH lessons by category
+     * GET /api/lessons/coding
+     */
+    @GetMapping("/{category}")
+    public List<LessonResponse> getLessonsByCategory(
+            @PathVariable String category
+    ) {
+        return lessonService.getLessonsByCategory(category);
+    }
+}

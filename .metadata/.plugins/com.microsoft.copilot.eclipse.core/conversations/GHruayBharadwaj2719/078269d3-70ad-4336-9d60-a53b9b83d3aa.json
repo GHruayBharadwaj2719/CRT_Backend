@@ -1,0 +1,56 @@
+{
+  "conversationId": "078269d3-70ad-4336-9d60-a53b9b83d3aa",
+  "title": "rectify",
+  "requesterUsername": "GHruayBharadwaj2719",
+  "responderUsername": "GitHub Copilot",
+  "turns": [
+    {
+      "message": {
+        "text": "rectify"
+      },
+      "currentDocument": {
+        "uri": "/CRT/src/main/java/repository/UserRepository.java"
+      },
+      "references": [],
+      "ignoredSkills": [],
+      "userLanguage": "en",
+      "source": "panel",
+      "model": "GPT-4.1",
+      "chatMode": "Agent",
+      "customChatModeId": "Agent",
+      "needToolCallConfirmation": true,
+      "turnId": "fb66ddbe-348c-4c2c-8d48-8a7a319229e1",
+      "role": "user",
+      "timestamp": "2025-12-15T09:46:53.090140900Z"
+    },
+    {
+      "reply": {
+        "annotations": [],
+        "references": [],
+        "hideText": false,
+        "notifications": [],
+        "followups": [],
+        "errorMessages": [
+          {
+            "error": {
+              "message": "You\u0027ve reached your monthly chat messages quota. Upgrade to Copilot Pro (30-day free trial) or wait for your allowance to renew. Request ID: e51ce7a8-9bbb-4722-800a-4f2012fcc765",
+              "code": 402
+            }
+          }
+        ],
+        "editAgentRounds": [],
+        "panelMessages": [],
+        "steps": [],
+        "agentMessages": [],
+        "data": {},
+        "modelName": "GPT-4.1",
+        "billingMultiplier": 1.0
+      },
+      "turnId": "2089f47d-2d27-4962-966c-8b70e483a49f",
+      "role": "copilot",
+      "timestamp": "2025-12-15T09:46:53.107142400Z"
+    }
+  ],
+  "creationDate": "2025-12-15T09:46:53.081444300Z",
+  "lastMessageDate": "2025-12-15T09:46:54.751322500Z"
+}

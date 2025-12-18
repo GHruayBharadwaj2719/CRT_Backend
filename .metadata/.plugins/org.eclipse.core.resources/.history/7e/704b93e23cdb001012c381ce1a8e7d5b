@@ -1,0 +1,39 @@
+package CRT.service;
+
+import CRT.dto.LessonResponse;
+import CRT.entity.Lesson;
+import CRT.repository.LessonRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class LessonService {
+
+    private final LessonRepository lessonRepository;
+
+    public LessonService(LessonRepository lessonRepository) {
+        this.lessonRepository = lessonRepository;
+    }
+
+    // ✅ DUPLICATE-SAFE BULK INSERT
+    @Transactional
+    public List<Lesson> addLessons(List<Lesson> lessons) {
+
+        List<Lesson> newLessons = new ArrayList<>();
+
+        for (Lesson lesson : lessons) {
+            if (!lessonRepository.existsById(lesson.getId())) {
+                newLessons.add(lesson);
+            }
+        }
+
+        return lessonRepository.saveAll(newLessons);
+    }
+
+    public List<LessonResponse> getLessonsByCategory(String category) {
+        return lessonRepository.findLessonsByCategory(category);
+    }
+}

@@ -1,0 +1,21 @@
+package CRT.service;
+
+import CRT.dto.LessonResponse;
+import CRT.repository.LessonRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class LessonService {
+
+    private final LessonRepository lessonRepository;
+
+    public LessonService(LessonRepository lessonRepository) {
+        this.lessonRepository = lessonRepository;
+    }
+
+    public List<LessonResponse> getLessonsByCategory(String category) {
+        return lessonRepository.findLessonsByCategory(category);
+    }
+}

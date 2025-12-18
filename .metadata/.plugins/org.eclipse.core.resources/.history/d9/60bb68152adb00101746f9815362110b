@@ -1,0 +1,9 @@
+package CRT.repository;
+
+import CRT.entity.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface ProblemRepository extends JpaRepository<Problems, Long> {
+    List<Problems> findByLessonId(String lessonId);
+}

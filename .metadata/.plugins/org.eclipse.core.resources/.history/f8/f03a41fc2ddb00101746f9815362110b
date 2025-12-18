@@ -1,0 +1,73 @@
+package CRT.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+@RestController
+@RequestMapping("/auth")
+@CrossOrigin(origins = "*") // React URL
+public class AuthController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    /* ================= SIGNUP ================= */
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+
+        if (user.getFullName() == null ||
+            user.getEmail() == null ||
+            user.getPassword() == null) {
+
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Missing required fields"));
+        }
+
+        if (userRepo.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Email already exists"));
+        }
+
+        userRepo.save(user); // plain text password
+
+        return ResponseEntity.ok(
+                Map.of("message", "User registered successfully")
+        );
+    }
+
+    /* ================= SIGNIN ================= */
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestBody User user) {
+
+        User dbUser = userRepo.findByEmail(user.getEmail()).orElse(null);
+
+        if (dbUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "User not found"));
+        }
+
+        // ✅ PLAIN TEXT CHECK (TRIMMED)
+        if (!user.getPassword().trim().equals(dbUser.getPassword().trim())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid credentials"));
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Login successful",
+                "email", dbUser.getEmail(),
+                "fullName", dbUser.getFullName()
+        ));
+    }
+
+    /* ================= LOGOUT ================= */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok(Map.of("message", "Logout successful"));
+    }
+}

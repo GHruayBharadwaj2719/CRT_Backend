@@ -1,0 +1,37 @@
+package CRT.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "problems")
+public class Problems {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "lesson_id")
+    private String lessonId;
+
+    private String name;
+
+    @Lob
+    @Column(name = "pdf_data")
+    private byte[] pdfData;
+
+    private String contentType;
+
+    public Long getId() { return id; }
+
+    public String getLessonId() { return lessonId; }
+    public void setLessonId(String lessonId) { this.lessonId = lessonId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public byte[] getPdfData() { return pdfData; }
+    public void setPdfData(byte[] pdfData) { this.pdfData = pdfData; }
+
+    public String getContentType() { return contentType; }
+    public void setContentType(String contentType) { this.contentType = contentType; }
+}

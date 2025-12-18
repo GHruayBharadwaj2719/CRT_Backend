@@ -1,0 +1,27 @@
+package CRT.dto;
+
+import java.util.List;
+import java.util.Map;
+
+public class LessonResponse {
+
+    public String id;
+    public String title;
+    public String duration;
+
+    // coding → language based
+    public Map<String, List<Link>> notes;
+
+    // all categories
+    public List<Link> problems;
+
+    public static class Link {
+        public String name;
+        public String url;
+
+        public Link(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
+    }
+}

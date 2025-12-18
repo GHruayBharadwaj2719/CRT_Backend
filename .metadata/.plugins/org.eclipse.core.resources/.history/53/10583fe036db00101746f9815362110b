@@ -1,0 +1,32 @@
+package CRT.dto;
+
+import java.util.List;
+
+public class LessonResponse {
+
+    private Long id;
+    private String title;
+    private String duration;
+    private Object notes;
+    private List<?> problems;
+
+    public LessonResponse(
+            Long id,
+            String title,
+            String duration,
+            Object notes,
+            List<?> problems
+    ) {
+        this.id = id;
+        this.title = title;
+        this.duration = duration;
+        this.notes = notes;
+        this.problems = problems;
+    }
+
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDuration() { return duration; }
+    public Object getNotes() { return notes; }
+    public List<?> getProblems() { return problems; }
+}

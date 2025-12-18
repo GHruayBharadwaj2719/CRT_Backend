@@ -1,0 +1,46 @@
+package CRT.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    @PostMapping("/signup")
+    public String signup(@RequestBody User user) {
+
+        if (user.getFullName() == null || user.getEmail() == null || user.getPassword() == null) {
+            throw new RuntimeException("Missing required fields");
+        }
+
+        userRepo.save(user);
+        return "User registered successfully";
+    }
+
+
+    @PostMapping("/signin")
+    public String signin(@RequestBody User user) {
+
+        User dbUser = userRepo.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getPassword().equals(dbUser.getPassword())) {
+            return "Login successful";
+        }
+
+        throw new RuntimeException("Invalid credentials");
+    }
+
+    // LOGOUT (no security/session used)
+    @PostMapping("/logout")
+    public String logout() {
+        return "Logout successful";
+    }
+}

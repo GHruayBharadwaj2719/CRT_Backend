@@ -1,0 +1,26 @@
+package CRT.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "lessons")
+public class Lesson {
+
+    @Id
+    private String id;
+
+    private String category;
+    private String title;
+    private String duration;
+
+    @Column(columnDefinition = "jsonb")
+    private String topics;
+
+    @Column(columnDefinition = "jsonb")
+    private String notes;
+
+    @Column(columnDefinition = "jsonb")
+    private String problems;
+
+    // getters & setters
+}

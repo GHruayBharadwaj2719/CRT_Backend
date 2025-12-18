@@ -1,0 +1,5 @@
+package CRT.dto;
+
+public class LoginResponse {
+
+}

@@ -1,0 +1,43 @@
+package CRT.service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import CRT.entity.Progress;
+import CRT.entity.User;
+import CRT.repository.*;
+
+import java.util.List;
+@Service
+public class ProgressService {
+
+    @Autowired
+    private ProgressRepository progressRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public Progress saveProgress(String email, Progress progress) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Progress existing =
+                progressRepository.findByUserAndModule(user, progress.getModule())
+                        .orElse(null);
+
+        if (existing != null) {
+            existing.setCompletionPercentage(progress.getCompletionPercentage());
+            return progressRepository.save(existing);
+        }
+
+        progress.setUser(user);
+        return progressRepository.save(progress);
+    }
+
+    public List<Progress> getProgress(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return progressRepository.findByUser(user);
+    }
+}

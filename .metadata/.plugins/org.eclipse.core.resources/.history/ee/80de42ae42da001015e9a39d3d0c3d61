@@ -1,0 +1,5 @@
+package CRT.config;
+
+public class WebConfig {
+
+}

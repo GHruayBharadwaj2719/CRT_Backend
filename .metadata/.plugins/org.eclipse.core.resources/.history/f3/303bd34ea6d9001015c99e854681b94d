@@ -1,0 +1,32 @@
+package controller;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import service.ProgressService;
+import entity.Progress;
+@RestController
+@RequestMapping("/progress")
+public class ProgressController {
+
+    @Autowired
+    private ProgressService progressService;
+
+    @PostMapping("/{email}")
+    public Progress saveProgress(@PathVariable String email,
+                                 @RequestBody Progress progress) {
+        return progressService.saveProgress(email, progress);
+    }
+
+    @GetMapping("/{email}")
+    public List<Progress> getProgress(@PathVariable String email) {
+        return progressService.getProgress(email);
+    }
+}
+add import statements

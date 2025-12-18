@@ -1,0 +1,25 @@
+package CRT.repository;
+
+import CRT.dto.LessonResponse;
+import CRT.entity.Lesson;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface LessonRepository extends JpaRepository<Lesson, String> {
+
+    @Query("""
+        SELECT new CRT.dto.LessonResponse(
+            l.id,
+            l.title,
+            l.duration,
+            l.notes,
+            l.problems
+        )
+        FROM Lesson l
+        WHERE l.category = :category
+    """)
+    List<LessonResponse> findLessonsByCategory(@Param("category") String category);
+}

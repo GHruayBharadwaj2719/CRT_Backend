@@ -1,0 +1,95 @@
+package CRT.service;
+
+import CRT.dto.LessonResponse;
+import CRT.entity.Lesson;
+import CRT.entity.Notes;
+import CRT.entity.Problems;
+import CRT.repository.LessonRepository;
+import CRT.repository.NoteRepository;
+import CRT.repository.ProblemsRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class LessonService {
+
+    private final LessonRepository lessonRepo;
+    private final NoteRepository noteRepo;
+    private final ProblemsRepository problemRepo;
+
+    public LessonService(
+            LessonRepository lessonRepo,
+            NoteRepository noteRepo,
+            ProblemsRepository problemRepo
+    ) {
+        this.lessonRepo = lessonRepo;
+        this.noteRepo = noteRepo;
+        this.problemRepo = problemRepo;
+    }
+
+    /**
+     * Fetch lessons by category with:
+     * - Notes (language-based for coding)
+     * - Problems (website links only)
+     */
+    public List<LessonResponse> getLessonsByCategory(String category) {
+
+        List<Lesson> lessons = lessonRepo.findByCategory(category);
+        List<LessonResponse> result = new ArrayList<>();
+
+        for (Lesson lesson : lessons) {
+
+            LessonResponse res = new LessonResponse();
+            res.id = lesson.getId();
+            res.title = lesson.getTitle();
+            res.duration = lesson.getDuration();
+
+            /* ================= NOTES ================= */
+            List<Notes> notes = noteRepo.findByLessonId(lesson.getId());
+
+            if (!notes.isEmpty()) {
+                Map<String, List<LessonResponse.Link>> noteMap = new HashMap<>();
+
+                for (Notes n : notes) {
+                    String lang =
+                            (n.getLanguage() == null || n.getLanguage().isBlank())
+                                    ? "common"
+                                    : n.getLanguage();
+
+                    noteMap
+                        .computeIfAbsent(lang, k -> new ArrayList<>())
+                        .add(new LessonResponse.Link(n.getName(), n.getUrl()));
+                }
+
+                res.notes = noteMap;
+            } else {
+                res.notes = null;
+            }
+
+            /* ================= PROBLEMS ================= */
+            List<Problems> problems = problemRepo.findByLessonId(lesson.getId());
+
+            if (!problems.isEmpty()) {
+                List<LessonResponse.Link> probList = new ArrayList<>();
+
+                for (Problems p : problems) {
+                    probList.add(
+                        new LessonResponse.Link(
+                            p.getName(),
+                            p.getUrl()   // 🔗 website link from DB
+                        )
+                    );
+                }
+
+                res.problems = probList;
+            } else {
+                res.problems = null;
+            }
+
+            result.add(res);
+        }
+
+        return result;
+    }
+}

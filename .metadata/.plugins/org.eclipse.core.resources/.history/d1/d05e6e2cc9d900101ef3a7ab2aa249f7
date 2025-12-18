@@ -1,0 +1,15 @@
+spring.application.name=CRT
+# DATASOURCE
+spring.datasource.url=jdbc:mysql://localhost:3306/crt
+spring.datasource.username=root
+spring.datasource.password=2719
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA / HIBERNATE
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.open-in-view=false
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+logging.level.org.springframework.security=ERROR
+
+server.port=2719

@@ -1,0 +1,92 @@
+package CRT.controller;
+
+import CRT.entity.User;
+import CRT.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/user")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+    @Autowired
+    private UserRepository userRepo;
+
+    /* =========================
+       GET USER PROFILE
+       ========================= */
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@RequestParam String email) {
+
+        Optional<User> userOpt = userRepo.findByEmail(email.trim().toLowerCase());
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User user = userOpt.get();
+        user.setPassword(null); // hide password
+
+        return ResponseEntity.ok(user);
+    }
+
+    /* =========================
+       UPDATE USER PROFILE
+       ========================= */
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody User updatedUser) {
+
+        if (updatedUser.getEmail() == null) {
+            return ResponseEntity.badRequest().body("Email is required");
+        }
+
+        Optional<User> userOpt =
+                userRepo.findByEmail(updatedUser.getEmail().trim().toLowerCase());
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User user = userOpt.get();
+
+        /* ---- Name Validation ---- */
+        if (updatedUser.getFullName() == null ||
+            updatedUser.getFullName().trim().length() < 3) {
+
+            return ResponseEntity.badRequest()
+                    .body("Full name must be at least 3 characters");
+        }
+
+        user.setFullName(updatedUser.getFullName());
+
+        boolean passwordChanged = false;
+
+        /* ---- Password Update (Optional) ---- */
+        if (updatedUser.getPassword() != null &&
+            !updatedUser.getPassword().isEmpty()) {
+
+            if (updatedUser.getPassword().length() < 6) {
+                return ResponseEntity.badRequest()
+                        .body("Password must be at least 6 characters");
+            }
+
+            user.setPassword(updatedUser.getPassword());
+            passwordChanged = true;
+        }
+
+        
+        userRepo.save(user);
+
+        /* ---- Force Re-Login if Password Changed ---- */
+        if (passwordChanged) {
+            return ResponseEntity.ok("PASSWORD_CHANGED");
+        }
+
+        return ResponseEntity.ok("PROFILE_UPDATED");
+    }
+}
